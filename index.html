@@ -1,8 +1,13 @@
 <html>
     <head>
-        <title></title>
+        <title>Javascript Data Table</title>
+        <link rel="stylesheet" href="jsDataTable.css" type="text/css">
     </head>
     <body>
-        
+        <!-- Search Filter By Column-->
+        <h1>JS Data Table</h1>
+        <input type="text" id="searchFilterInput" onkeyup="searchDataTable()" placeholder="Enter Search Text" title="Search Text">
+        <table id="jsDataTable"></table>
+        <script src="jsDataTable.js" type="text/javascript"></script>
     </body>
 </html>
