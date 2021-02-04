@@ -1,36 +1,18 @@
-function createTemplate(data) {
-    const template = `
-        <tr>
-            <td>${data.id}</td>
-            <td>${data.username}</td>
-            <td>${data.fullname}</td>
-        </tr>
-    `;
-    return template;
-}
-
-function initializeDataTable() {
-    var local_data = tableData;
-    var row_data = '', keys = [];
-    for(var k in tableData[0]) keys.push(k);
-
-    for(var i = 0; i < local_data.length; i++) {
-        row_data += createTemplate(local_data[i]);
+function createTemplate(data, rowDataType, index) {
+    const tr = document.createElement('tr');
+    for(let i = 0; i < data.length; i++) {
+        const td = document.createElement(rowDataType);
+        let tdText = data[i], replaceStr = " ";
+        if(rowDataType == 'th') {
+            if(data[i].indexOf("_") == 0) replaceStr = "";
+            tdText = data[i].split("_").join(replaceStr);
+        } else {
+            if(i == 0) tdText = index + 1;
+        }
+        td.textContent = tdText;
+        tr.appendChild(td);
     }
-
-    const tableHeadTemplate = `
-        <tr>
-            <th>${keys[0]}</th>
-            <th>${keys[1]}</th>
-            <th>${keys[2]}</th>
-        </tr>
-    `;
-    var tableHead = document.createElement('thead');
-    var tableBody = document.createElement('tbody');
-    tableHead.innerHTML = tableHeadTemplate;
-    tableBody.innerHTML = row_data;
-    document.getElementById('jsDataTable').appendChild(tableHead);
-    document.getElementById('jsDataTable').appendChild(tableBody);
+    return tr;
 }
 
 function filterTable(event) {
@@ -38,7 +20,6 @@ function filterTable(event) {
     var filter = target.value.toUpperCase();
     var rows = document.querySelector("#jsDataTable tbody").rows;
 
-    
     let hasValue = [];
     for(var i = 0; i < rows.length; i++) {
         var columns = [];
@@ -55,8 +36,28 @@ function filterTable(event) {
             rows[i].style.display = "none";
         }
     }
+    
+    document.getElementById('filteredResults').textContent = hasValue.filter(item => item).length;
 }
 
-document.getElementById('searchFilterInput').addEventListener('keyup', filterTable, false);
+function initializeDataTable() {
+    let local_data = tableData;
+    let tableHead = document.createElement('thead');
+    let tableBody = document.createElement('tbody');
+
+    let keys = Object.keys(tableData[0]);
+    tableHead.appendChild(createTemplate(keys, 'th', null));
+
+    for(var i = 0; i < local_data.length; i++) {
+        let row_data = local_data[i];
+        let data = Object.values(row_data);
+        tableBody.appendChild(createTemplate(data, 'td', i));
+    }
+    document.getElementById('jsDataTable').appendChild(tableHead);
+    document.getElementById('jsDataTable').appendChild(tableBody);
+    document.getElementById('searchFilterInput').addEventListener('keyup', filterTable, false);
+}
 
 initializeDataTable();
+
+
