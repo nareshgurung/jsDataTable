@@ -11,7 +11,7 @@ function createTemplate(data, rowDataType, index) {
                 tdText = data[i].split("_").join(" ");
                 td.setAttribute("id", `col-${data[i]}`);
             }
-            td.setAttribute('onClick', `sortTable('jsDataTable', ${i + 1})`)
+            td.setAttribute('onClick', `sortTable('jsDataTable', ${i})`)
         } else if(rowDataType == 'td') {
             if(i == 0) tdText = index + 1;
         }
